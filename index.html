@@ -36,9 +36,25 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 /* preloader */
 .loader{position:fixed;inset:0;z-index:100;background:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px}
 .loader .count{font-family:var(--display);font-weight:900;font-size:clamp(90px,22vw,260px);color:var(--lime);line-height:1}
-.loader .bar{width:min(320px,60vw);height:3px;background:#ffffff22;overflow:hidden}
+.loader .road{position:relative;width:min(640px,86vw);padding-top:84px}
+.loader .bar{width:100%;height:4px;background:#ffffff22;overflow:hidden;border-radius:4px}
+.loader .tank{position:absolute;bottom:4px;right:0;width:200px;animation:rumble .18s steps(2) infinite}
+.tank-svg{display:block;width:100%;height:auto;overflow:visible}
+@keyframes rumble{50%{transform:translateY(-1.5px)}}
+.tank .tread{animation:tread .25s linear infinite}
+@keyframes tread{to{stroke-dashoffset:8}}
+.tank .spk{animation:spk .4s linear infinite;transform-box:fill-box;transform-origin:center}
+@keyframes spk{to{transform:rotate(-360deg)}}
+.tank .smoke circle{fill:#ffffff40;animation:puff 1s ease-out infinite;transform-box:fill-box;transform-origin:center}
+.tank .smoke circle:nth-child(2){animation-delay:.33s}.tank .smoke circle:nth-child(3){animation-delay:.66s}
+@keyframes puff{from{opacity:.9;transform:scale(.4) translate(0,0)}to{opacity:0;transform:scale(2.2) translate(8px,-10px)}}
+.tank .flash{fill:#FFD23A;opacity:0;transform-box:fill-box;transform-origin:center}
+.loader.fire .tank .flash{animation:flash .45s ease-out}
+.loader.fire .tank{animation:recoil .45s ease-out}
+@keyframes flash{0%{opacity:1;transform:scale(.3)}40%{opacity:1;transform:scale(2.6)}100%{opacity:0;transform:scale(3.4)}}
+@keyframes recoil{20%{transform:translateX(10px)}100%{transform:none}}
 .loader .bar i{display:block;height:100%;width:0;background:var(--pink)}
-.loader small{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:#ffffff88;direction:ltr}
+.loader small{font-size:13px;color:#ffffff99}
 
 /* cursor */
 .cursor{position:fixed;top:0;left:0;width:18px;height:18px;border-radius:50%;background:var(--lime);mix-blend-mode:difference;pointer-events:none;z-index:95;transform:translate(-50%,-50%);transition:width .25s,height .25s}
@@ -338,8 +354,32 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 
 <div class="loader" id="loader">
   <div class="count" id="count">٠</div>
-  <div class="bar"><i id="bar"></i></div>
-  <small>LOADING THE MAHRAGAN</small>
+  <div class="road"><div class="tank" id="tank"><svg class="tank-svg" viewBox="-62 0 222 72" aria-hidden="true">
+      <g class="smoke"><circle cx="150" cy="30" r="5"/><circle cx="156" cy="24" r="4"/><circle cx="160" cy="16" r="3"/></g>
+      <circle class="flash" cx="-56" cy="23" r="10"/>
+      <rect x="-56" y="20.5" width="116" height="5" rx="1.5" fill="#66733F"/>
+      <rect x="-58" y="19" width="9" height="8" rx="1.5" fill="#4C5631"/>
+      <rect x="2" y="19.5" width="10" height="7" rx="1.5" fill="#66733F"/>
+      <path d="M50 33 L58 16 L118 13 L130 20 L128 33 Z" fill="#8A9A55"/>
+      <path d="M58 16 L118 13 L122 16 L60 19 Z" fill="#A6B76A"/>
+      <rect x="92" y="7" width="14" height="6" rx="2" fill="#6E7C45"/>
+      <line x1="114" y1="13" x2="120" y2="-2" stroke="#4C5631" stroke-width="1.5"/>
+      <path d="M78 22 l2.4 5 5.4.6-4 3.6 1.1 5.3-4.9-2.7-4.9 2.7 1.1-5.3-4-3.6 5.4-.6z" fill="#D4FF3A" transform="translate(0 -6) scale(.8) translate(18 4)"/>
+      <path d="M12 46 L26 33 L148 33 L156 46 Z" fill="#93A35C"/>
+      <rect x="30" y="37" width="110" height="3" fill="#7B8A4C"/>
+      <rect x="16" y="45" width="130" height="22" rx="11" fill="#3A4029"/>
+      <rect class="tread" x="17.5" y="46.5" width="127" height="19" rx="9.5" fill="none" stroke="#7C8466" stroke-width="2.4" stroke-dasharray="4 4"/>
+      <g class="wheels" fill="#6A7449" stroke="#1C1F16" stroke-width="1.5">
+        <g transform="translate(28 56)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(47 57)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(66 57)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(85 57)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(104 57)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(123 57)"><circle r="7"/><path d="M-5 0H5M0-5V5" class="spk"/></g>
+        <g transform="translate(138 55)"><circle r="6"/><path d="M-4 0H4M0-4V4" class="spk"/></g>
+      </g>
+    </svg></div><div class="bar"><i id="bar"></i></div></div>
+  <small>اركب الدبابة… بنحمّل المهرجان</small>
 </div>
 
 <!-- HERO -->
@@ -607,13 +647,15 @@ const loader=document.getElementById("loader"),count=document.getElementById("co
 let introDone=false;
 function intro(){
   if(introDone)return;introDone=true;
-  const t0=performance.now(),D=1300,ease=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-  (function tick(now){const t=Math.min(1,(now-t0)/D),v=Math.round(ease(t)*100);
-    count.textContent=toAr(v);barEl.style.width=v+"%";
+  const t0=performance.now(),D=2300,ease=t=>-(Math.cos(Math.PI*t)-1)/2;
+  const tankEl=document.getElementById("tank");
+  (function tick(now){const t=Math.min(1,(now-t0)/D),e=ease(t),v=Math.round(e*100);
+    count.textContent=toAr(v);barEl.style.width=v+"%";tankEl.style.right=`calc(${e*100}% - ${(1-e)*0+200*e}px + ${(1-e)*40}px)`;
     if(t<1)return requestAnimationFrame(tick);
-    loader.classList.add("pop");
-    setTimeout(()=>{loader.classList.add("out");document.body.classList.add("ready")},350);
-    setTimeout(()=>loader.remove(),1500)})(t0);
+    loader.classList.add("fire");
+    setTimeout(()=>loader.classList.add("pop"),380);
+    setTimeout(()=>{loader.classList.add("out");document.body.classList.add("ready")},730);
+    setTimeout(()=>loader.remove(),1900)})(t0);
 }
 (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(intro);
 setTimeout(intro,2500);
