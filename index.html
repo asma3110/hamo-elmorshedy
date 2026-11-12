@@ -116,6 +116,25 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
   transform:scale(0);transition:transform .35s cubic-bezier(.2,1.6,.4,1)}
 .card:hover .play{transform:scale(1)}
 
+/* sticky mini player */
+.mini{position:fixed;z-index:97;left:20px;bottom:20px;display:flex;align-items:center;gap:12px;padding:8px 10px 8px 8px;border-radius:18px;background:var(--ink);color:var(--paper);
+  box-shadow:0 18px 50px #0007,0 0 0 2px var(--c,#D4FF3A);translate:0 160%;opacity:0;transition:translate .6s cubic-bezier(.2,1.3,.4,1),opacity .3s;max-width:calc(100vw - 40px);direction:rtl}
+.mini.on{translate:0 0;opacity:1}
+.mp-vid{position:relative;flex:none;width:150px;aspect-ratio:16/9;border-radius:11px;overflow:hidden;background:#000}
+.mp-vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mp-info{display:flex;flex-direction:column;min-width:0;max-width:200px;gap:2px}
+.mp-info b{font-family:var(--display);font-weight:900;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--c,#D4FF3A)}
+.mp-info small{font-size:12px;opacity:.7}
+.mp-eq{display:flex;gap:2px;align-items:flex-end;height:12px}
+.mp-eq i{width:3px;height:100%;background:var(--c,#D4FF3A);border-radius:2px;animation:eq .55s ease-in-out infinite alternate}
+.mp-eq i:nth-child(2){animation-delay:-.2s}.mp-eq i:nth-child(3){animation-delay:-.35s}.mp-eq i:nth-child(4){animation-delay:-.1s}
+.mini.paused .mp-eq i{animation-play-state:paused;height:30%}
+.mp-b{flex:none;width:40px;height:40px;border-radius:50%;background:var(--c,#D4FF3A);color:var(--f,#0E0E12);font-size:14px;font-weight:900;display:grid;place-items:center;transition:transform .2s}
+.mp-b:hover{transform:scale(1.1)}
+.mp-b.x{background:#ffffff1f;color:var(--paper)}
+.row.now .t{color:var(--pink)}
+.row.now .n::before{content:"▶ "}
+@media (max-width:760px){.mini{left:10px;right:10px;bottom:10px;gap:8px}.mp-vid{width:96px}.mp-info{flex:1;max-width:none}.mp-info b{font-size:15px}.mp-b{width:36px;height:36px}}
 /* player modal */
 .player{position:fixed;inset:0;z-index:96;display:grid;place-items:center;background:#0E0E12e6;opacity:0;pointer-events:none;transition:opacity .35s}
 .player.on{opacity:1;pointer-events:auto}
@@ -378,7 +397,14 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
   <ul class="rows" id="rows"></ul>
 </section>
 <div class="float-cover" id="floatCover"></div>
-<div class="player" id="player"><div class="box"><div class="vid" id="vid"></div><div class="ttl"><span id="ptitle"></span><button class="x" id="px" aria-label="اقفل">✕</button></div></div></div>
+<div class="mini" id="mini" aria-live="polite">
+  <div class="mp-vid" id="mpVid"></div>
+  <div class="mp-info"><span class="mp-eq"><i></i><i></i><i></i><i></i></span><b id="mpT"></b><small>حمو المرشدي</small></div>
+  <button class="mp-b" id="mpBtn" aria-label="إيقاف مؤقت">❚❚</button>
+  <button class="mp-b" id="mpNext" aria-label="الأغنية اللي بعدها">⏭</button>
+  <button class="mp-b x" id="mpX" aria-label="اقفل">✕</button>
+</div>
+<div class="player" id="player" hidden><div class="box"><div class="vid" id="vid"></div><div class="ttl"><span id="ptitle"></span><button class="x" id="px" aria-label="اقفل">✕</button></div></div></div>
 
 <!-- FINALE (sticky scroll story) -->
 <section class="finale" id="book-intro">
@@ -555,13 +581,25 @@ new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classLi
 
 /* player */
 const player=document.getElementById("player"),vid=document.getElementById("vid");
-function openPlayer(i){const s=SONGS[i];vid.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&rel=0" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
-  document.getElementById("ptitle").textContent=s.t;player.classList.add("on");
+/* sticky mini player: keeps playing while you scroll */
+const mp=document.getElementById("mini"),mpVid=document.getElementById("mpVid"),mpT=document.getElementById("mpT"),mpBtn=document.getElementById("mpBtn");
+let curSong=-1,mpPlaying=false;
+function ytCmd(f){const fr=mpVid.querySelector("iframe");fr&&fr.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:[]}),"*")}
+function openPlayer(i){
+  if(i===curSong){togglePlay();return}
+  curSong=i;const s=SONGS[i];
+  mpVid.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" title="${s.t}"></iframe>`;
+  mpT.textContent=s.t;mp.style.setProperty("--c",s.bg);mp.style.setProperty("--f",s.fg);
+  mp.classList.add("on");setPlaying(true);
+  document.querySelectorAll(".row").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));
   if(playing)document.getElementById("beat").click()}
-function closePlayer(){player.classList.remove("on");setTimeout(()=>vid.innerHTML="",350)}
-document.getElementById("px").onclick=closePlayer;
-player.addEventListener("click",e=>{if(e.target===player)closePlayer()});
-addEventListener("keydown",e=>{if(e.key==="Escape")closePlayer()});
+function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.textContent=v?"❚❚":"▶";mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
+function togglePlay(){ytCmd(mpPlaying?"pauseVideo":"playVideo");setPlaying(!mpPlaying)}
+function closePlayer(){ytCmd("stopVideo");mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
+mpBtn.onclick=togglePlay;
+document.getElementById("mpX").onclick=closePlayer;
+document.getElementById("mpNext").onclick=()=>openPlayer((curSong+1)%SONGS.length);
+addEventListener("keydown",e=>{if(e.key==="Escape"&&mp.classList.contains("on"))closePlayer()});
 
 /* ===== intro: counter -> circle wipe -> hero choreography (CSS) ===== */
 const loader=document.getElementById("loader"),count=document.getElementById("count"),barEl=document.getElementById("bar");
