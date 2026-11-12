@@ -182,7 +182,7 @@ body.playing .beat-btn .eq i:nth-child(2){animation-delay:-.2s}body.playing .bea
 
 /* about */
 .about{position:relative;padding:18vh 6vw 14vh;background:var(--ink)}
-.label{font-family:var(--mono);font-size:12px;letter-spacing:.2em;color:var(--lime);direction:ltr;text-align:right;margin-bottom:28px}
+.label{font-family:var(--display);font-weight:700;font-size:15px;color:var(--lime);text-align:right;margin-bottom:28px}
 .big-text{font-family:var(--display);font-weight:700;font-size:clamp(30px,5.2vw,78px);line-height:1.25;max-width:1200px}
 .big-text .w{opacity:.14;transition:opacity .3s}
 .big-text .w.on{opacity:1}
@@ -423,7 +423,7 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 
 
   <div class="hero-bottom">
-    <button class="beat-btn" id="beat"><span class="eq"><i></i><i></i><i></i><i></i></span><span id="beatTxt">شغّل الإيقاع</span></button>
+    <span></span>
     <span class="upload-btn">MAHRAGANAT 2026</span>
   </div>
 </header>
@@ -432,7 +432,7 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 
 <!-- ABOUT -->
 <section class="about" id="about">
-  <p class="label">01 / WHO IS HAMO</p>
+  <p class="label">٠١ / مين حمو</p>
   <p class="big-text" id="bigText">صوت طالع من <span class="hl">قلب الشارع</span> المصري، المهرجان بتاعه بيتشغل في كل فرح وكل توك توك وكل سماعة على ناصية. حمو المرشدي مش بس مطرب، ده <span class="hl2">تريند ماشي على رجلين</span>.</p>
   <div class="stickers rv">
     <span class="sticker">🎤 مهرجانات</span><span class="sticker">🔥 الأكثر استماعًا</span><span class="sticker">🏆 خدت الكاس</span><span class="sticker">👑 لسه كينج</span><span class="sticker">📍 القاهرة</span>
@@ -442,7 +442,7 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 <!-- PLAYLIST -->
 <section class="playlist" id="playlist">
   <div class="pl-head">
-    <div><p class="label">02 / TRENDING NOW</p><h2 class="split">الترندنج</h2></div>
+    <div><p class="label">٠٢ / الترندنج دلوقتي</p><h2 class="split">الترندنج</h2></div>
     <p class="rv">أكتر المهرجانات اللي مكسّرة الدنيا دلوقتي. عدّي على أي مهرجان وشوفي الصفحة بتلبس لونه.</p>
   </div>
   <ul class="rows" id="rows"></ul>
@@ -470,7 +470,7 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 
 <!-- BOOK (original style) -->
 <section class="book" id="booking">
-  <p class="label" style="color:var(--ink)">03 / BOOKING</p>
+  <p class="label" style="color:var(--ink)">٠٣ / احجز حفلتك</p>
   <h2 class="split">فرحك من غير<br><em>المرشدي</em><br>ناقص.</h2>
   <a href="#" class="cta rv">احجز حفلتك ←</a>
   <div class="socials rv"><a href="https://www.youtube.com/@Hamo.Morshedy" target="_blank" rel="noopener">YOUTUBE ↗</a><a href="https://www.tiktok.com/@mohamedelmorshdy" target="_blank" rel="noopener">TIKTOK ↗</a><a href="https://www.instagram.com/hamoelmorshdy" target="_blank" rel="noopener">INSTAGRAM ↗</a><a href="https://www.facebook.com/profile.php?id=61580675941736" target="_blank" rel="noopener">FACEBOOK ↗</a><a href="https://open.spotify.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">SPOTIFY ↗</a><a href="https://play.anghami.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">ANGHAMI ↗</a></div>
@@ -569,7 +569,7 @@ function sched(){while(nextT<ctx.currentTime+.1){const s=step%16,t=nextT;
   if(MEL[s]!==null)stab(t,HIJAZ[(MEL[s]+(bar%2?1:0))%HIJAZ.length]);
   if(s===0){const d=(t-ctx.currentTime)*1000;const b=bar;setTimeout(()=>{if(b%2===0)setBg(PAL[(b/2)%PAL.length])},d);bar++}
   nextT+=SPB;step++}}
-document.getElementById("beat").onclick=()=>{
+const beatBtn=document.getElementById("beat");if(beatBtn)beatBtn.onclick=()=>{
   if(!ctx)ctx=new (window.AudioContext||window.webkitAudioContext)();
   playing=!playing;document.body.classList.toggle("playing",playing);
   document.getElementById("beatTxt").textContent=playing?"وقّف الإيقاع":"شغّل الإيقاع";
@@ -658,7 +658,7 @@ function openPlayer(i){
   mpT.textContent=s.t;mp.style.setProperty("--c",s.bg);mp.style.setProperty("--f",s.fg);
   mp.classList.add("on");setPlaying(true);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));
-  if(playing)document.getElementById("beat").click()}
+  if(playing&&beatBtn)beatBtn.click()}
 function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.textContent=v?"❚❚":"▶";mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
 function togglePlay(){ytCmd(mpPlaying?"pauseVideo":"playVideo");setPlaying(!mpPlaying)}
 function closePlayer(){ytCmd("stopVideo");mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
