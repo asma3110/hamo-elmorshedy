@@ -204,6 +204,23 @@ body.playing .beat-btn .eq i:nth-child(2){animation-delay:-.2s}body.playing .bea
 .row .t{font-family:var(--display);font-weight:900;font-size:clamp(26px,4.2vw,58px);line-height:1.1;transition:transform .35s cubic-bezier(.2,1.4,.4,1)}
 .row:hover .t{transform:translateX(-24px)}
 .row .k{font-family:var(--mono);font-size:12px;direction:ltr}
+.row .tw{display:flex;flex-direction:column;gap:26px;min-width:0}
+.row .t{align-self:flex-start}
+.pl{display:flex;align-items:center;gap:12px;max-width:560px;font-family:var(--display);font-weight:700;font-size:13px;opacity:.55;transition:opacity .3s}
+.row:hover .pl,.row.now .pl{opacity:1}
+.pl .ln{position:relative;flex:1;height:3px;background:currentColor;border-radius:3px;background-clip:content-box;opacity:1}
+.pl .ln::before{content:"";position:absolute;inset:0;background:currentColor;opacity:.25;border-radius:3px}
+.pl .ln{background:none}
+.pl .fill{position:absolute;top:0;bottom:0;right:0;width:var(--p,0%);background:var(--pink);border-radius:3px}
+.pl .tk{position:absolute;bottom:3px;right:var(--p,0%);width:56px;translate:30% 0;color:currentColor;transition:color .3s}
+.mtank{display:block;width:100%;height:auto;overflow:visible}
+.row.now .pl .tk{color:var(--pink)}
+.row.now.playing .pl .tk{animation:rumble .18s steps(2) infinite}
+.row.now.playing .mtank .tr{animation:tread .25s linear infinite}
+.pl .pt,.pl .pd{min-width:34px;text-align:center;font-variant-numeric:tabular-nums}
+.mini .mp-prog{position:absolute;left:14px;right:14px;bottom:3px;height:3px;border-radius:3px;background:#ffffff22;overflow:hidden}
+.mini .mp-prog i{position:absolute;top:0;bottom:0;right:0;width:var(--p,0%);background:var(--c,#D4FF3A)}
+@media (max-width:760px){.pl{gap:8px;font-size:11px}.pl .tk{width:36px}}
 .row .go{width:52px;height:52px;border-radius:50%;border:2px solid currentColor;display:grid;place-items:center;transition:background .2s,color .2s,transform .3s}
 .row:hover .go{background:var(--ink);color:var(--paper);transform:rotate(-45deg)}
 .float-cover{position:fixed;top:0;left:0;width:220px;height:220px;pointer-events:none;z-index:50;border-radius:6px;overflow:hidden;opacity:0;transform:translate(-50%,-50%) scale(.6) rotate(-8deg);transition:opacity .25s,transform .35s cubic-bezier(.2,1.4,.4,1);box-shadow:0 20px 50px #0005}
@@ -443,6 +460,7 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
   <button class="mp-b" id="mpBtn" aria-label="إيقاف مؤقت">❚❚</button>
   <button class="mp-b" id="mpNext" aria-label="الأغنية اللي بعدها">⏭</button>
   <button class="mp-b x" id="mpX" aria-label="اقفل">✕</button>
+  <span class="mp-prog"><i></i></span>
 </div>
 <div class="player" id="player" hidden><div class="box"><div class="vid" id="vid"></div><div class="ttl"><span id="ptitle"></span><button class="x" id="px" aria-label="اقفل">✕</button></div></div></div>
 
@@ -481,20 +499,21 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 <script>
 const toAr=n=>String(n).replace(/\d/g,d=>"٠١٢٣٤٥٦٧٨٩"[d]);
 const SONGS=[
- {t:"اركب الدبابة",id:"p7VfrreAOJ8",bg:"#3F6B2A",fg:"#D4FF3A",hb:"#3F6B2A"},
- {t:"طب ب بحبك",id:"BiUGXFnDnXc",bg:"#E8232B",fg:"#F4F1EA",hb:"#E8232B"},
- {t:"شطبت الأسامي",id:"noXfwCr4n7U",bg:"#F4F1EA",fg:"#0E0E12",hb:"#16161C"},
- {t:"طب دا كلام ياطيري",id:"kzvbWpO55q0",bg:"#D4FF3A",fg:"#0E0E12",hb:"#1F8A4C"},
- {t:"لسه كينج",id:"-OLvCc0fwJk",bg:"#F5B800",fg:"#0E0E12",hb:"#C98A00"},
- {t:"الولا حمو جه",id:"LwL24fGL_YY",bg:"#FF6A1A",fg:"#0E0E12",hb:"#FF5A12"},
- {t:"الصدارة بيتي",id:"OYDzwg6qoww",bg:"#2B4BFF",fg:"#D4FF3A",hb:"#2B4BFF"},
- {t:"خدت الكاس",id:"JDqnN4o4-vg",bg:"#7B4DFF",fg:"#F4F1EA",hb:"#7B4DFF"},
- {t:"يعيوني متدمعيش تاني",id:"x_ne-vhH3OA",bg:"#FF3D9A",fg:"#0E0E12",hb:"#FF3D9A"},
- {t:"احتل البابا الساحة",sub:"ALL EYEZ ON ME",id:"kAfyIlnxlSU",bg:"#0E0E12",fg:"#D4FF3A",hb:"#16161C"}
+ {t:"اركب الدبابة",id:"p7VfrreAOJ8",d:167,bg:"#3F6B2A",fg:"#D4FF3A",hb:"#3F6B2A"},
+ {t:"طب ب بحبك",id:"BiUGXFnDnXc",d:161,bg:"#E8232B",fg:"#F4F1EA",hb:"#E8232B"},
+ {t:"شطبت الأسامي",id:"noXfwCr4n7U",d:202,bg:"#F4F1EA",fg:"#0E0E12",hb:"#16161C"},
+ {t:"طب دا كلام ياطيري",id:"kzvbWpO55q0",d:164,bg:"#D4FF3A",fg:"#0E0E12",hb:"#1F8A4C"},
+ {t:"لسه كينج",id:"-OLvCc0fwJk",d:225,bg:"#F5B800",fg:"#0E0E12",hb:"#C98A00"},
+ {t:"الولا حمو جه",id:"LwL24fGL_YY",d:223,bg:"#FF6A1A",fg:"#0E0E12",hb:"#FF5A12"},
+ {t:"الصدارة بيتي",id:"OYDzwg6qoww",d:204,bg:"#2B4BFF",fg:"#D4FF3A",hb:"#2B4BFF"},
+ {t:"خدت الكاس",id:"JDqnN4o4-vg",d:184,bg:"#7B4DFF",fg:"#F4F1EA",hb:"#7B4DFF"},
+ {t:"يعيوني متدمعيش تاني",id:"x_ne-vhH3OA",d:248,bg:"#FF3D9A",fg:"#0E0E12",hb:"#FF3D9A"},
+ {t:"احتل البابا الساحة",sub:"ALL EYEZ ON ME",id:"kAfyIlnxlSU",d:208,bg:"#0E0E12",fg:"#D4FF3A",hb:"#16161C"}
 ];
 const thumb=s=>`https://i.ytimg.com/vi/${s.id}/${s.q==="hq"?"hqdefault":"maxresdefault"}.jpg`;
 const HAMO=document.getElementById("img").src;
 const cardHTML=(s,i,k=i)=>`<div class="card v${i%3}" data-i="${i}" style="--c:${s.bg};--f:${s.fg};--k:${k};--r:${(k%2?1:-1)*(6+k%4*3)}deg"><img class="hm" src="${HAMO}" alt="" draggable="false"><span class="no">${toAr(String(+i+1).padStart(2,"0"))}</span><h3>${s.t}</h3><span class="tag">${s.sub||"2026"}</span><span class="play">▶</span></div>`;
+const fmt=x=>toAr(Math.floor(x/60))+":"+toAr(String(Math.floor(x%60)).padStart(2,"0"));
 const ytUrl=s=>"https://www.youtube.com/watch?v="+s.id;
 
 /* build marquee */
@@ -503,7 +522,7 @@ track.innerHTML=SONGS.map((s,i)=>cardHTML(s,i,i)).join("")+SONGS.map((s,i)=>card
 /* ticker */
 document.getElementById("ticker").innerHTML=Array(2).fill(SONGS.map(s=>`<span>${s.t}</span>`).join("")).join("");
 /* rows */
-document.getElementById("rows").innerHTML=SONGS.map((s,i)=>`<li class="row" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span class="t">${s.t}</span><span class="k">${s.sub||"MAHRAGAN"} · 2026</span><a class="go" href="${ytUrl(s)}" target="_blank" rel="noopener" aria-label="شغّل ${s.t}">↗</a></li>`).join("");
+document.getElementById("rows").innerHTML=SONGS.map((s,i)=>`<li class="row" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span class="tw"><span class="t">${s.t}</span><span class="pl"><span class="pt">٠:٠٠</span><span class="ln"><i class="fill"></i><span class="tk"><svg class="mtank" viewBox="-30 0 112 40" aria-hidden="true"><rect x="-28" y="11" width="62" height="3" rx="1" fill="currentColor" opacity=".75"/><path d="M26 18 L30 9 L62 8 L69 12 L68 18 Z" fill="currentColor"/><path d="M5 25 L13 18 L78 18 L82 25 Z" fill="currentColor"/><rect x="7" y="25" width="72" height="12" rx="6" fill="currentColor" opacity=".55"/><rect class="tr" x="8" y="26" width="70" height="10" rx="5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-dasharray="3 3"/></svg></span></span><span class="pd">${fmt(s.d)}</span></span></span><span class="k">${s.sub||"MAHRAGAN"} · 2026</span><a class="go" href="${ytUrl(s)}" target="_blank" rel="noopener" aria-label="شغّل ${s.t}">↗</a></li>`).join("");
 
 /* palette swatches = interactive identity color */
 const PAL=["#2B4BFF","#FF3D9A","#0E0E12","#FF6A1A","#7B4DFF"];
@@ -631,13 +650,26 @@ function openPlayer(i){
   curSong=i;const s=SONGS[i];
   mpVid.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" title="${s.t}"></iframe>`;
   mpT.textContent=s.t;mp.style.setProperty("--c",s.bg);mp.style.setProperty("--f",s.fg);
-  mp.classList.add("on");setPlaying(true);
-  document.querySelectorAll(".row").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));
+  mp.classList.add("on");pos=0;dur=s.d;ytSeen=false;listenYT();
+  document.querySelectorAll(".row").forEach(r=>{const on=+r.dataset.i===i;r.classList.toggle("now",on);if(!on){r.style.setProperty("--p","0%");r.querySelector(".pt").textContent="٠:٠٠"}});
+  setPlaying(true);
   if(playing)document.getElementById("beat").click()}
-function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.textContent=v?"❚❚":"▶";mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
+function setPlaying(v){mpPlaying=v;curSong>=0&&rowOf(curSong)&&rowOf(curSong).classList.toggle("playing",v);mp.classList.toggle("paused",!v);mpBtn.textContent=v?"❚❚":"▶";mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
 function togglePlay(){ytCmd(mpPlaying?"pauseVideo":"playVideo");setPlaying(!mpPlaying)}
-function closePlayer(){ytCmd("stopVideo");mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
+function closePlayer(){ytCmd("stopVideo");document.querySelectorAll(".row").forEach(r=>{r.classList.remove("playing");r.style.setProperty("--p","0%");r.querySelector(".pt").textContent="٠:٠٠"});mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
 mpBtn.onclick=togglePlay;
+/* progress: synced with YouTube when it reports time, otherwise counts locally */
+let pos=0,dur=0,lastT=performance.now(),ytSeen=false;
+function rowOf(i){return document.querySelector(`.row[data-i="${i}"]`)}
+function paint(){if(curSong<0)return;const p=dur?Math.min(100,pos/dur*100):0;const r=rowOf(curSong);
+  if(r){r.style.setProperty("--p",p+"%");r.querySelector(".pt").textContent=fmt(pos);r.querySelector(".pd").textContent=fmt(dur)}
+  mp.style.setProperty("--p",p+"%")}
+(function prog(t){const dt=(t-lastT)/1000;lastT=t;if(curSong>=0&&mpPlaying&&!ytSeen){pos=Math.min(dur,pos+dt);if(pos>=dur&&dur)songEnded()}paint();requestAnimationFrame(prog)})(lastT);
+function songEnded(){openPlayer((curSong+1)%SONGS.length)}
+addEventListener("message",e=>{if(!/youtube/.test(e.origin))return;let d;try{d=JSON.parse(e.data)}catch(_){return}
+  if(d.event==="infoDelivery"&&d.info){const f=d.info;if(typeof f.currentTime==="number"){pos=f.currentTime;ytSeen=true}if(f.duration)dur=f.duration;
+    if(f.playerState===1&&!mpPlaying)setPlaying(true);if(f.playerState===2&&mpPlaying)setPlaying(false);if(f.playerState===0)songEnded()}});
+function listenYT(){const fr=mpVid.querySelector("iframe");if(!fr)return;fr.addEventListener("load",()=>{let n=0;const k=setInterval(()=>{fr.contentWindow&&fr.contentWindow.postMessage(JSON.stringify({event:"listening",id:1,channel:"widget"}),"*");if(++n>8||ytSeen)clearInterval(k)},400)})}
 document.getElementById("mpX").onclick=closePlayer;
 document.getElementById("mpNext").onclick=()=>openPlayer((curSong+1)%SONGS.length);
 addEventListener("keydown",e=>{if(e.key==="Escape"&&mp.classList.contains("on"))closePlayer()});
