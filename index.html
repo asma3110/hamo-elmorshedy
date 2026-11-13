@@ -149,7 +149,7 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .mp-b:hover{transform:scale(1.1)}
 .mp-b.x{background:#ffffff1f;color:var(--paper)}
 .row.now .t{color:var(--pink)}
-.row.now .n::before{content:"▶ "}
+.row.now .n::before{content:"● "}
 @media (max-width:760px){.mini{left:10px;right:10px;bottom:10px;gap:8px}.mp-vid{width:96px}.mp-info{flex:1;max-width:none}.mp-info b{font-size:15px}.mp-b{width:36px;height:36px}}
 /* player modal */
 .player{position:fixed;inset:0;z-index:96;display:grid;place-items:center;background:#0E0E12e6;opacity:0;pointer-events:none;transition:opacity .35s}
@@ -277,6 +277,13 @@ body.playing .beat-btn .eq i:nth-child(2){animation-delay:-.2s}body.playing .bea
   .fin-mark{height:min(100%,220px)}
   .ft-word span{font-size:27vw}
 }
+.ic{width:1.05em;height:1.05em;display:inline-block;vertical-align:-.15em;flex:none}
+.row .go .ic{width:22px;height:22px}
+.card .play .ic{width:20px;height:20px;margin-left:3px}
+.mp-b .ic{width:16px;height:16px}
+.ft-up .ic{width:24px;height:24px}
+.cta .ic{width:22px;height:22px}
+.socials a .ic{width:14px;height:14px;vertical-align:-.1em}
 /* reveal fallback */
 .rv{opacity:0;transform:translateY(40px);transition:opacity .9s ease,transform .9s cubic-bezier(.2,.9,.3,1)}
 .rv.in{opacity:1;transform:none}
@@ -451,8 +458,8 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 <div class="mini" id="mini" aria-live="polite">
   <div class="mp-vid" id="mpVid"></div>
   <div class="mp-info"><span class="mp-eq"><i></i><i></i><i></i><i></i></span><b id="mpT"></b><small>حمو المرشدي</small></div>
-  <button class="mp-b" id="mpBtn" aria-label="إيقاف مؤقت">❚❚</button>
-  <button class="mp-b" id="mpNext" aria-label="الأغنية اللي بعدها">⏭</button>
+  <button class="mp-b" id="mpBtn" aria-label="إيقاف مؤقت"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z" fill="currentColor"/></svg></button>
+  <button class="mp-b" id="mpNext" aria-label="الأغنية اللي بعدها"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5v14l10-7zM16 5h3v14h-3z" fill="currentColor"/></svg></button>
   <button class="mp-b x" id="mpX" aria-label="اقفل">✕</button>
 </div>
 <div class="player" id="player" hidden><div class="box"><div class="vid" id="vid"></div><div class="ttl"><span id="ptitle"></span><button class="x" id="px" aria-label="اقفل">✕</button></div></div></div>
@@ -472,8 +479,8 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
 <section class="book" id="booking">
   <p class="label" style="color:var(--ink)">٠٣ / احجز حفلتك</p>
   <h2 class="split">فرحك من غير<br><em>المرشدي</em><br>ناقص.</h2>
-  <a href="#" class="cta rv">احجز حفلتك ←</a>
-  <div class="socials rv"><a href="https://www.youtube.com/@Hamo.Morshedy" target="_blank" rel="noopener">YOUTUBE ↗</a><a href="https://www.tiktok.com/@mohamedelmorshdy" target="_blank" rel="noopener">TIKTOK ↗</a><a href="https://www.instagram.com/hamoelmorshdy" target="_blank" rel="noopener">INSTAGRAM ↗</a><a href="https://www.facebook.com/profile.php?id=61580675941736" target="_blank" rel="noopener">FACEBOOK ↗</a><a href="https://open.spotify.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">SPOTIFY ↗</a><a href="https://play.anghami.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">ANGHAMI ↗</a></div>
+  <a href="#" class="cta rv">احجز حفلتك <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></a>
+  <div class="socials rv"><a href="https://www.youtube.com/@Hamo.Morshedy" target="_blank" rel="noopener">YOUTUBE <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.tiktok.com/@mohamedelmorshdy" target="_blank" rel="noopener">TIKTOK <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.instagram.com/hamoelmorshdy" target="_blank" rel="noopener">INSTAGRAM <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.facebook.com/profile.php?id=61580675941736" target="_blank" rel="noopener">FACEBOOK <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://open.spotify.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">SPOTIFY <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://play.anghami.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">ANGHAMI <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
 </section>
 
 <footer class="footer" id="footer">
@@ -483,8 +490,8 @@ body.ready .card{animation:cardIn .95s cubic-bezier(.3,1.45,.5,1) both;animation
       <p>مطرب مهرجانات طالع من قلب الشارع المصري.<br>المهرجان لسه مكمّل.</p>
     </div>
     <nav class="ft-nav"><a href="#about">مين حمو</a><a href="#playlist">الترندنج</a><a href="#booking">احجز</a></nav>
-    <div class="socials"><a href="https://www.youtube.com/@Hamo.Morshedy" target="_blank" rel="noopener">YOUTUBE ↗</a><a href="https://www.tiktok.com/@mohamedelmorshdy" target="_blank" rel="noopener">TIKTOK ↗</a><a href="https://www.instagram.com/hamoelmorshdy" target="_blank" rel="noopener">INSTAGRAM ↗</a><a href="https://www.facebook.com/profile.php?id=61580675941736" target="_blank" rel="noopener">FACEBOOK ↗</a><a href="https://open.spotify.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">SPOTIFY ↗</a><a href="https://play.anghami.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">ANGHAMI ↗</a></div>
-    <a href="#hero" class="ft-up" aria-label="ارجع لأول الصفحة">↑</a>
+    <div class="socials"><a href="https://www.youtube.com/@Hamo.Morshedy" target="_blank" rel="noopener">YOUTUBE <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.tiktok.com/@mohamedelmorshdy" target="_blank" rel="noopener">TIKTOK <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.instagram.com/hamoelmorshdy" target="_blank" rel="noopener">INSTAGRAM <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://www.facebook.com/profile.php?id=61580675941736" target="_blank" rel="noopener">FACEBOOK <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://open.spotify.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">SPOTIFY <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a><a href="https://play.anghami.com/search/%D8%AD%D9%85%D9%88%20%D8%A7%D9%84%D9%85%D8%B1%D8%B4%D8%AF%D9%8A" target="_blank" rel="noopener">ANGHAMI <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>
+    <a href="#hero" class="ft-up" aria-label="ارجع لأول الصفحة"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
   </div>
   <div class="ft-word" id="ftWord"><span>المرشدي</span></div>
   <div class="ft-legal"><span>مشروع عرض مستقل وغير رسمي (Fan concept). الأسماء والأغاني ملك أصحابها.</span><span>© ٢٠٢٦</span></div>
@@ -506,7 +513,7 @@ const SONGS=[
 ];
 const thumb=s=>`https://i.ytimg.com/vi/${s.id}/${s.q==="hq"?"hqdefault":"maxresdefault"}.jpg`;
 const HAMO=document.getElementById("img").src;
-const cardHTML=(s,i,k=i)=>`<div class="card v${i%3}" data-i="${i}" style="--c:${s.bg};--f:${s.fg};--k:${k};--r:${(k%2?1:-1)*(6+k%4*3)}deg"><img class="hm" src="${HAMO}" alt="" draggable="false"><span class="no">${toAr(String(+i+1).padStart(2,"0"))}</span><h3>${s.t}</h3><span class="tag">${s.sub||"2026"}</span><span class="play">▶</span></div>`;
+const cardHTML=(s,i,k=i)=>`<div class="card v${i%3}" data-i="${i}" style="--c:${s.bg};--f:${s.fg};--k:${k};--r:${(k%2?1:-1)*(6+k%4*3)}deg"><img class="hm" src="${HAMO}" alt="" draggable="false"><span class="no">${toAr(String(+i+1).padStart(2,"0"))}</span><h3>${s.t}</h3><span class="tag">${s.sub||"2026"}</span><span class="play"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg></span></div>`;
 const ytUrl=s=>"https://www.youtube.com/watch?v="+s.id;
 
 /* build marquee */
@@ -515,7 +522,7 @@ track.innerHTML=SONGS.map((s,i)=>cardHTML(s,i,i)).join("")+SONGS.map((s,i)=>card
 /* ticker */
 document.getElementById("ticker").innerHTML=Array(2).fill(SONGS.map(s=>`<span>${s.t}</span>`).join("")).join("");
 /* rows */
-document.getElementById("rows").innerHTML=SONGS.map((s,i)=>`<li class="row" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span class="t">${s.t}</span><span class="k">${s.sub||"MAHRAGAN"} · 2026</span><a class="go" href="${ytUrl(s)}" target="_blank" rel="noopener" aria-label="شغّل ${s.t}">↗</a></li>`).join("");
+document.getElementById("rows").innerHTML=SONGS.map((s,i)=>`<li class="row" data-i="${i}"><span class="n">${String(i+1).padStart(2,"0")}</span><span class="t">${s.t}</span><span class="k">${s.sub||"MAHRAGAN"} · 2026</span><a class="go" href="${ytUrl(s)}" target="_blank" rel="noopener" aria-label="شغّل ${s.t}"><svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg></a></li>`).join("");
 
 /* palette swatches = interactive identity color */
 const PAL=["#2B4BFF","#FF3D9A","#0E0E12","#FF6A1A","#7B4DFF"];
@@ -648,6 +655,7 @@ new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classLi
 /* player */
 const player=document.getElementById("player"),vid=document.getElementById("vid");
 /* sticky mini player: keeps playing while you scroll */
+const PAUSE_IC='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z" fill="currentColor"/></svg>',PLAY_IC='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>';
 const mp=document.getElementById("mini"),mpVid=document.getElementById("mpVid"),mpT=document.getElementById("mpT"),mpBtn=document.getElementById("mpBtn");
 let curSong=-1,mpPlaying=false;
 function ytCmd(f){const fr=mpVid.querySelector("iframe");fr&&fr.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:[]}),"*")}
@@ -659,7 +667,7 @@ function openPlayer(i){
   mp.classList.add("on");setPlaying(true);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));
   if(playing&&beatBtn)beatBtn.click()}
-function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.textContent=v?"❚❚":"▶";mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
+function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.innerHTML=v?PAUSE_IC:PLAY_IC;mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
 function togglePlay(){ytCmd(mpPlaying?"pauseVideo":"playVideo");setPlaying(!mpPlaying)}
 function closePlayer(){ytCmd("stopVideo");mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
 mpBtn.onclick=togglePlay;
