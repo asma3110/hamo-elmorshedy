@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>حمو المرشدي — الموقع الرسمي (Fan concept)</title>
+<link rel="preconnect" href="https://www.youtube.com">
+<link rel="preconnect" href="https://www.youtube-nocookie.com">
+<link rel="preconnect" href="https://i.ytimg.com">
+<link rel="preconnect" href="https://www.google.com">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -145,6 +149,10 @@ button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
 .mp-eq i{width:3px;height:100%;background:var(--c,#D4FF3A);border-radius:2px;animation:eq .55s ease-in-out infinite alternate}
 .mp-eq i:nth-child(2){animation-delay:-.2s}.mp-eq i:nth-child(3){animation-delay:-.35s}.mp-eq i:nth-child(4){animation-delay:-.1s}
 .mini.paused .mp-eq i{animation-play-state:paused;height:30%}
+.mp-vid iframe,.mp-vid #ytHolder{position:absolute;inset:0;width:100%;height:100%;border:0}
+.mini.loading .mp-vid::after{content:"";position:absolute;inset:0;margin:auto;width:26px;height:26px;border-radius:50%;border:3px solid #ffffff40;border-top-color:var(--c,#D4FF3A);animation:spinL .7s linear infinite;z-index:2}
+.mini.loading .mp-info small::after{content:" · بيحمّل…"}
+@keyframes spinL{to{transform:rotate(360deg)}}
 .mp-b{flex:none;width:40px;height:40px;border-radius:50%;background:var(--c,#D4FF3A);color:var(--f,#0E0E12);font-size:14px;font-weight:900;display:grid;place-items:center;transition:transform .2s}
 .mp-b:hover{transform:scale(1.1)}
 .mp-b.x{background:#ffffff1f;color:var(--paper)}
@@ -658,18 +666,39 @@ const player=document.getElementById("player"),vid=document.getElementById("vid"
 const PAUSE_IC='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 4h4.5v16H6zM13.5 4H18v16h-4.5z" fill="currentColor"/></svg>',PLAY_IC='<svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>';
 const mp=document.getElementById("mini"),mpVid=document.getElementById("mpVid"),mpT=document.getElementById("mpT"),mpBtn=document.getElementById("mpBtn");
 let curSong=-1,mpPlaying=false;
-function ytCmd(f){const fr=mpVid.querySelector("iframe");fr&&fr.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:[]}),"*")}
+/* one YouTube player, created once in the background, then re-used for every song (fast switching) */
+let yt=null,ytReady=false,pending=null,fallback=false,fbT;
+/* safety net: if the YouTube API can't load, embed the song directly like before */
+function fbPlay(s){mpVid.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" title="${s.t}"></iframe>`;mp.classList.remove("loading")}
+function fbCmd(f){const fr=mpVid.querySelector("iframe");fr&&fr.contentWindow.postMessage(JSON.stringify({event:"command",func:f,args:[]}),"*")}
+mpVid.innerHTML='<div id="ytHolder"></div>';
+function loadYT(){if(loadYT.done)return;loadYT.done=1;const sc=document.createElement("script");sc.src="https://www.youtube.com/iframe_api";sc.async=true;document.head.appendChild(sc)}
+window.onYouTubeIframeAPIReady=()=>{
+  yt=new YT.Player("ytHolder",{host:"https://www.youtube-nocookie.com",videoId:SONGS[0].id,
+    playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1},
+    events:{onReady:()=>{ytReady=true;if(pending!==null){yt.loadVideoById(SONGS[pending].id);pending=null}},
+      onStateChange:e=>{const S=YT.PlayerState;
+        if(e.data===S.PLAYING){mp.classList.remove("loading");setPlaying(true)}
+        else if(e.data===S.BUFFERING){mp.classList.add("loading")}
+        else if(e.data===S.PAUSED){mp.classList.remove("loading");setPlaying(false)}
+        else if(e.data===S.ENDED){openPlayer((curSong+1)%SONGS.length)}}}});
+  const fr=yt.getIframe&&yt.getIframe();if(fr)fr.setAttribute("allow","autoplay; encrypted-media; picture-in-picture");
+};
+["pointerdown","pointermove","touchstart","scroll"].forEach(ev=>addEventListener(ev,loadYT,{once:true,passive:true}));
+setTimeout(loadYT,3500);
 function openPlayer(i){
   if(i===curSong){togglePlay();return}
   curSong=i;const s=SONGS[i];
-  mpVid.innerHTML=`<iframe src="https://www.youtube-nocookie.com/embed/${s.id}?autoplay=1&rel=0&playsinline=1&enablejsapi=1&modestbranding=1" allow="autoplay; encrypted-media; picture-in-picture" title="${s.t}"></iframe>`;
   mpT.textContent=s.t;mp.style.setProperty("--c",s.bg);mp.style.setProperty("--f",s.fg);
-  mp.classList.add("on");setPlaying(true);
+  mp.classList.add("on","loading");setPlaying(true);
   document.querySelectorAll(".row").forEach(r=>r.classList.toggle("now",+r.dataset.i===i));
+  if(ytReady){yt.loadVideoById(s.id)}
+  else if(fallback){fbPlay(s)}
+  else{pending=i;loadYT();clearTimeout(fbT);fbT=setTimeout(()=>{if(!ytReady&&pending===i){fallback=true;pending=null;fbPlay(s)}},4000)}
   if(playing&&beatBtn)beatBtn.click()}
 function setPlaying(v){mpPlaying=v;mp.classList.toggle("paused",!v);mpBtn.innerHTML=v?PAUSE_IC:PLAY_IC;mpBtn.setAttribute("aria-label",v?"إيقاف مؤقت":"تشغيل")}
-function togglePlay(){ytCmd(mpPlaying?"pauseVideo":"playVideo");setPlaying(!mpPlaying)}
-function closePlayer(){ytCmd("stopVideo");mp.classList.remove("on");curSong=-1;setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},400);document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
+function togglePlay(){if(ytReady){mpPlaying?yt.pauseVideo():yt.playVideo()}else if(fallback){fbCmd(mpPlaying?"pauseVideo":"playVideo")}else return;setPlaying(!mpPlaying)}
+function closePlayer(){if(ytReady)yt.stopVideo();if(fallback){fbCmd("stopVideo");setTimeout(()=>{if(curSong<0)mpVid.innerHTML=""},300)}pending=null;mp.classList.remove("on","loading");curSong=-1;document.querySelectorAll(".row.now").forEach(r=>r.classList.remove("now"))}
 mpBtn.onclick=togglePlay;
 document.getElementById("mpX").onclick=closePlayer;
 document.getElementById("mpNext").onclick=()=>openPlayer((curSong+1)%SONGS.length);
